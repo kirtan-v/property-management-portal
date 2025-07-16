@@ -1,0 +1,47 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: frontend
+  labels:
+    app: frontend
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: frontend
+  template:
+    metadata:
+      labels:
+        app: frontend
+    spec:
+      containers:
+      - name: frontend
+        image: gcr.io/web-project-455421/frontend:latest
+        ports:
+        - containerPort: 80
+        env:
+          - name: REACT_APP_USER_URL
+            value: "http://{IP}:8080/users/"
+          - name: REACT_APP_AUTH_URL
+            value: "http://{IP}:8080/auth/"
+          - name: REACT_APP_PROPERTY_URL
+            value: "http://{IP}:8080/property/"
+          - name: REACT_APP_LEASE_URL
+            value: "http://{IP}:8080/lease/"
+          - name: REACT_APP_LEASE_REQUEST_URL
+            value: "http://{IP}:8080/lease-request/"
+          - name: REACT_APP_NOTIFICATION_URL
+            value: "http://{IP}:8080/notification/"
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: frontend
+spec:
+  type: LoadBalancer
+  selector:
+    app: frontend
+  ports:
+  - protocol: TCP
+    port: 3000
+    targetPort: 80

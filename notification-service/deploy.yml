@@ -1,0 +1,58 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: notification-service
+  labels:
+    app: notification-service
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: notification-service
+  template:
+    metadata:
+      labels:
+        app: notification-service
+    spec:
+      containers:
+        - name: notification-service
+          image: gcr.io/web-project-455421/notification-service:latest
+          ports:
+            - containerPort: 8085
+          env:
+            - name: SPRING_MAIL_HOST
+              value: "smtp.gmail.com"
+            - name: SPRING_MAIL_PORT
+              value: "587"
+            - name: SPRING_MAIL_USERNAME
+              value: "YOUR_EMAIL"
+            - name: SPRING_MAIL_PASSWORD
+              value: "YOUR_PASSWORD"
+            - name: SPRING_MAIL_PROPERTIES_MAIL_SMTP_AUTH
+              value: "true"
+            - name: SPRING_MAIL_PROPERTIES_MAIL_SMTP_STARTTLS_ENABLE
+              value: "true"
+            - name: SPRING_MAIL_PROPERTIES_MAIL_SMTP_STARTTLS_REQUIRED
+              value: "true"
+            - name: USER_SERVICE_URL
+              value: "http://user-service:8081/users/"
+            - name: AUTH_SERVICE_URL
+              value: "http://auth-service:8082/auth/"
+            - name: PROPERTY_SERVICE_URL
+              value: "http://property-service:8083/property/"
+            - name: LEASE_SERVICE_URL
+              value: "http://lease-service:8084/lease/"
+            - name: NOTIFICATION_SERVICE_URL
+              value: "http://notification-service:8085/notification/"
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: notification-service
+spec:
+  selector:
+    app: notification-service
+  ports:
+    - protocol: TCP
+      port: 8085
+      targetPort: 8085

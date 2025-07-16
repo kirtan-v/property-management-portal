@@ -1,0 +1,54 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: lease-service
+  labels:
+    app: lease-service
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: lease-service
+  template:
+    metadata:
+      labels:
+        app: lease-service
+    spec:
+      containers:
+        - name: lease-service
+          image: gcr.io/web-project-455421/lease-service:latest
+          ports:
+            - containerPort: 8084
+          env:
+            - name: SPRING_DATASOURCE_URL
+              value: "jdbc:mysql://{IP}:3306/leasedb?createDatabaseIfNotExist=true"
+            - name: SPRING_DATASOURCE_USERNAME
+              value: "root"
+            - name: SPRING_DATASOURCE_PASSWORD
+              value: "YOUR_PASSWORD"
+            - name: JWT_SECRET
+              value: "YOUR_SECRET"
+            - name: JWT_EXPIRATION
+              value: "3600000"
+            - name: USER_SERVICE_URL
+              value: "http://user-service:8081/users/"
+            - name: AUTH_SERVICE_URL
+              value: "http://auth-service:8082/auth/"
+            - name: PROPERTY_SERVICE_URL
+              value: "http://property-service:8083/property/"
+            - name: LEASE_SERVICE_URL
+              value: "http://lease-service:8084/lease/"
+            - name: NOTIFICATION_SERVICE_URL
+              value: "http://notification-service:8085/notification/"
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: lease-service
+spec:
+  selector:
+    app: lease-service
+  ports:
+    - protocol: TCP
+      port: 8084
+      targetPort: 8084
