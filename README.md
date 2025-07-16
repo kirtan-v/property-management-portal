@@ -164,6 +164,14 @@ JWT_EXPIRATION=3600000
 
 ---
 
-## 📬 Contact & Contributions
+## 📄 License
 
-Feel free to open issues or pull requests for improvements. Contributions are welcome!
+This project is built as part of an Advanced Topics in Web Development course and is intended for academic and demonstration purposes only.
+
+---
+
+## 🙋‍♂️ Author
+
+**Kirtan Vaja**  
+MACS, Dalhousie University  
+LinkedIn: https://www.linkedin.com/in/kirtan-vaja/
